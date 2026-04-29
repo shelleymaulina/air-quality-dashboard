@@ -21,16 +21,23 @@ st.markdown("Analisis Dataset Kualitas Udara")
 # ======================
 df = pd.read_csv("dashboard/main_data.csv")
 
-# Buat datetime
-df['datetime'] = pd.to_datetime(df['datetime'])
+# Buat kolom datetime dari year, month, day, hour
+df['datetime'] = pd.to_datetime(
+    df[['year', 'month', 'day', 'hour']]
+)
 
-# Sidebar filter
+# Pastikan month integer
+df['month'] = df['month'].astype(int)
+
+# ======================
+# SIDEBAR
+# ======================
 st.sidebar.header("Filter Data")
 
 station = st.sidebar.multiselect(
     "Pilih Stasiun",
-    options=df['station'].unique(),
-    default=df['station'].unique()
+    options=sorted(df['station'].unique()),
+    default=sorted(df['station'].unique())
 )
 
 filtered_df = df[df['station'].isin(station)]
@@ -40,23 +47,25 @@ filtered_df = df[df['station'].isin(station)]
 # ======================
 col1, col2, col3 = st.columns(3)
 
-col1.metric("Rata-rata PM2.5", round(filtered_df['PM2.5'].mean(),2))
-col2.metric("Rata-rata PM10", round(filtered_df['PM10'].mean(),2))
+col1.metric("Rata-rata PM2.5", round(filtered_df['PM2.5'].mean(), 2))
+col2.metric("Rata-rata PM10", round(filtered_df['PM10'].mean(), 2))
 col3.metric("Jumlah Stasiun", filtered_df['station'].nunique())
 
 # ======================
 # GRAFIK 1
 # ======================
-st.subheader("📈 Tren PM2.5 dan PM10")
+st.subheader("📈 Tren PM2.5 dan PM10 per Bulan")
 
-monthly = filtered_df.groupby('month')[['PM2.5','PM10']].mean()
+monthly = filtered_df.groupby('month')[['PM2.5', 'PM10']].mean().reset_index()
 
-fig, ax = plt.subplots(figsize=(10,5))
-ax.plot(monthly.index, monthly['PM2.5'], marker='o', label='PM2.5')
-ax.plot(monthly.index, monthly['PM10'], marker='o', label='PM10')
+fig, ax = plt.subplots(figsize=(10, 5))
+
+ax.plot(monthly['month'], monthly['PM2.5'], marker='o', linewidth=2, label='PM2.5')
+ax.plot(monthly['month'], monthly['PM10'], marker='o', linewidth=2, label='PM10')
 
 ax.set_xlabel("Bulan")
 ax.set_ylabel("Konsentrasi")
+ax.set_xticks(range(1, 13))
 ax.legend()
 
 st.pyplot(fig)
@@ -64,11 +73,11 @@ st.pyplot(fig)
 # ======================
 # GRAFIK 2
 # ======================
-st.subheader("🏭 Polusi Berdasarkan Stasiun")
+st.subheader("🏭 Rata-rata PM2.5 Berdasarkan Stasiun")
 
-station_avg = filtered_df.groupby('station')['PM2.5'].mean().sort_values()
+station_avg = filtered_df.groupby('station')['PM2.5'].mean().sort_values(ascending=False)
 
-fig2, ax2 = plt.subplots(figsize=(10,5))
+fig2, ax2 = plt.subplots(figsize=(10, 5))
 
 sns.barplot(
     x=station_avg.values,
@@ -77,6 +86,9 @@ sns.barplot(
     ax=ax2
 )
 
+ax2.set_xlabel("PM2.5")
+ax2.set_ylabel("Stasiun")
+
 st.pyplot(fig2)
 
 # ======================
@@ -84,14 +96,15 @@ st.pyplot(fig2)
 # ======================
 st.subheader("🌦️ Korelasi Faktor Cuaca")
 
-corr = filtered_df[['PM2.5','TEMP','RAIN','WSPM']].corr()
+corr = filtered_df[['PM2.5', 'TEMP', 'RAIN', 'WSPM']].corr()
 
-fig3, ax3 = plt.subplots(figsize=(8,5))
+fig3, ax3 = plt.subplots(figsize=(8, 5))
 
 sns.heatmap(
     corr,
     annot=True,
     cmap="coolwarm",
+    fmt=".2f",
     ax=ax3
 )
 
