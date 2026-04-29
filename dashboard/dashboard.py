@@ -115,4 +115,4 @@ st.info("Kecepatan angin memiliki korelasi negatif terhadap PM2.5.")
 # FOOTER
 # ======================
 st.markdown("---")
-st.caption("Created by Sherli | Dicoding Submission")
+st.caption("Created by Shelley | Dicoding Submission")
