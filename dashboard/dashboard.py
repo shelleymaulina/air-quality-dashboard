@@ -1,5 +1,4 @@
 # dashboard/dashboard.py
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -18,7 +17,6 @@ st.set_page_config(
 # LOAD DATA
 # ======================
 df = pd.read_csv("dashboard/main_data.csv")
-
 df['datetime'] = pd.to_datetime(df[['year','month','day','hour']])
 
 # ======================
@@ -26,14 +24,12 @@ df['datetime'] = pd.to_datetime(df[['year','month','day','hour']])
 # ======================
 st.title("🌍 Air Quality Dashboard")
 st.markdown("Analisis kualitas udara berdasarkan PM2.5, PM10, lokasi stasiun, dan faktor cuaca.")
-
 st.info("Dashboard ini menampilkan pola polusi udara dan faktor yang memengaruhinya.")
 
 # ======================
 # SIDEBAR
 # ======================
 st.sidebar.header("📌 Filter")
-
 station = st.sidebar.multiselect(
     "Pilih Stasiun",
     options=sorted(df['station'].unique()),
@@ -46,7 +42,6 @@ filtered_df = df[df['station'].isin(station)]
 # METRICS
 # ======================
 st.subheader("📊 Ringkasan Data")
-
 col1, col2, col3 = st.columns(3)
 
 col1.metric("Rata-rata PM2.5", round(filtered_df['PM2.5'].mean(),2))
@@ -71,26 +66,36 @@ ax.grid(True, alpha=0.3)
 
 st.pyplot(fig)
 
-# Insight otomatis
 st.success("PM2.5 dan PM10 cenderung meningkat pada awal dan akhir tahun.")
 
 # ======================
 # GRAFIK 2
 # ======================
-st.subheader("🏭 Rata-rata PM2.5 Berdasarkan Stasiun")
+st.subheader("🏭 Rata-rata PM2.5 per Stasiun")
 
-station_avg = filtered_df.groupby('station')['PM2.5'].mean().sort_values(ascending=False)
+station_avg = (
+    filtered_df
+    .groupby('station')['PM2.5']
+    .mean()
+    .sort_values()
+)
 
 fig2, ax2 = plt.subplots(figsize=(10,5))
+
 sns.barplot(
     x=station_avg.values,
     y=station_avg.index,
-    palette="Reds_r"
+    palette="Reds_r",
+    ax=ax2
 )
+
+ax2.set_xlabel("Rata-rata PM2.5")
+ax2.set_ylabel("Stasiun")
+ax2.set_title("Rata-rata PM2.5 per Stasiun")
 
 st.pyplot(fig2)
 
-st.warning(f"Stasiun dengan polusi tertinggi: {station_avg.index[0]}")
+st.success(f"Stasiun dengan PM2.5 tertinggi adalah {station_avg.idxmax()}.")
 
 # ======================
 # GRAFIK 3
@@ -100,11 +105,13 @@ st.subheader("🌦️ Korelasi Faktor Cuaca")
 corr = filtered_df[['PM2.5','TEMP','RAIN','WSPM']].corr()
 
 fig3, ax3 = plt.subplots(figsize=(8,5))
+
 sns.heatmap(
     corr,
     annot=True,
     cmap="coolwarm",
-    fmt=".2f"
+    fmt=".2f",
+    ax=ax3
 )
 
 st.pyplot(fig3)
