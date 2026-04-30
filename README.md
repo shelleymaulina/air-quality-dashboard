@@ -15,7 +15,7 @@ Fokus analisis meliputi pola konsentrasi polutan dari waktu ke waktu, lokasi den
 
 ---
 
-## 📊 Apa yang Bisa Dilihat di Dashboard?
+## Apa yang Bisa Dilihat di Dashboard?
 
 ✨ **Statistik Ringkas**  
 Menampilkan rata-rata PM2.5, PM10, dan jumlah stasiun pemantauan.
@@ -50,8 +50,18 @@ submission/
 
 ```
 
-## ⚙️ Cara Install & Menjalankan Dashboard
+## ⚙️ Cara Install Library
 
 ```bash
 pip install -r requirements.txt
+```
+
+## ▶️ Cara Menjalankan Dashboard
+
+```bash
 streamlit run dashboard/dashboard.py
+```
+
+## 📦 Dataset
+Dataset yang digunakan adalah Air Quality Dataset dengan periode Maret 2013 hingga Februari 2017.
+
