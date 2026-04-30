@@ -48,7 +48,7 @@ submission/
 ├── requirements.txt
 └── url.txt
 
----
+```
 
 ## ⚙️ Cara Install & Menjalankan Dashboard
 
