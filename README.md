@@ -1,7 +1,17 @@
 # 🌫️ Air Pollution Insight Dashboard
 
 Dashboard ini dibuat untuk menganalisis kondisi kualitas udara menggunakan **Air Quality Dataset**.  
-Fokus analisis meliputi pola konsentrasi polutan dari waktu ke waktu, lokasi dengan tingkat pencemaran tertinggi, serta hubungan antara kondisi cuaca dan polusi udara.
+Fokus analisis meliputi pola konsentrasi polutan dari waktu ke waktu, lokasi dengan tingkat pencemaran tertinggi, serta hubungan antara kondisi cuaca dan polusi udara selama periode **Maret 2013 hingga Februari 2017**.
+
+---
+
+## 🎯 Pertanyaan Bisnis
+
+1. Bagaimana tren konsentrasi PM2.5 dan PM10 per bulan selama periode Maret 2013 hingga Februari 2017, serta kapan periode polusi tertinggi terjadi?
+
+2. Stasiun pemantauan mana yang memiliki rata-rata tingkat polusi tertinggi selama periode Maret 2013 hingga Februari 2017?
+
+3. Bagaimana pengaruh faktor cuaca seperti suhu, curah hujan, dan kecepatan angin terhadap tingkat polusi udara selama periode Maret 2013 hingga Februari 2017?
 
 ---
 
@@ -24,7 +34,7 @@ Pengguna dapat memilih stasiun tertentu untuk melihat data yang lebih spesifik.
 
 ---
 
-## Susunan File Proyek
+## 📁 Susunan File Proyek
 
 ```bash
 submission/
@@ -37,3 +47,15 @@ submission/
 ├── README.md
 ├── requirements.txt
 └── url.txt
+
+## ⚙️ Cara Install Library
+```bash
+pip install -r requirements.txt
+
+## ▶️ Cara Menjalankan Dashboard
+```bash
+streamlit run dashboard/dashboard.py
+
+## 📦 Dataset
+Dataset yang digunakan adalah Air Quality Dataset dengan periode Maret 2013 hingga Februari 2017.
+
